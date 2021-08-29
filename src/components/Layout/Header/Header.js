@@ -25,8 +25,6 @@ const Header = (props) => {
   const { loginWithRedirect, logout, isAuthenticated, isLoading } = useAuth0();
   const theme = getFromLS("theme") || "dark";
 
-  
-
   if (isLoading) {
     return <Loading />;
   }

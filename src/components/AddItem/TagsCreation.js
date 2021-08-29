@@ -10,9 +10,10 @@ const colourOptions = [
 
 const TagsCreation = ({fields, setFields}) => {
   const [suggestions, setSuggestions] = useState([{}]);
-  const [newSuggestions, setNewSuggestions] = useState([{}]);
+  // const [newSuggestions, setNewSuggestions] = useState([{}]);
   const [currentItemTags, setCurrentItemTags] = useState([{}]);
   //console.log(newSuggestions);
+
   const intl = useIntl();
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const TagsCreation = ({fields, setFields}) => {
   const handleChange = (values) => {
     values.forEach((val) => {
       if (val.__isNew__) {
-        setNewSuggestions((prev) => [...new Set([...prev, val])]);
+        // setNewSuggestions((prev) => [...new Set([...prev, val])]);
         //we call our API here to update one by one.
         //in the worst case we ll handle the api after the collection d be created.
         //we have a state of suggestions anyway.
@@ -33,9 +34,22 @@ const TagsCreation = ({fields, setFields}) => {
   };
 
   useEffect(() => {
-    // here we ll call API to save currentItemTags to our API...
-    console.log(currentItemTags);
-  }, [currentItemTags]);
+    // setting up our currentItemTags to fields
+    // const temp_arr = fields;
+    // temp_arr.find((field) => {
+    //   if (field.value === "tags") {
+    //     return field.value === currentItemTags);
+    //   });
+    const temp_arr = fields;
+    temp_arr.find((field) => {
+      if (field.value === "tags") {
+        return (field.visible_value = currentItemTags);
+      } else {
+        return "";
+      }
+    });
+    setFields(temp_arr);
+  }, [currentItemTags, fields, setFields]);
 
   const noOptionMessageHandler = () => {
     return intl.formatMessage({

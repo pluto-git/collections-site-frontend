@@ -5,11 +5,10 @@ import AdditionalTextarea from "./AdditionalTextarea";
 
 const AdditionalFields = ({
   fields,
+  setFields,
   handleDescriptionChange,
-  handleFieldNameChange,
 }) => {
   const intl = useIntl();
-  console.log(fields);
   return (
     <>
       {fields &&
@@ -23,9 +22,10 @@ const AdditionalFields = ({
                     id: "add-item.item-" + field.label,
                   })}
                   className="form-control"
-                  onChange={handleFieldNameChange}
+                  defaultValue={field.visible_label}
                   key={index + 2}
                   id={field.value}
+                  disabled
                 />
               </td>
               <td>
@@ -33,7 +33,8 @@ const AdditionalFields = ({
                   <Checkbox
                     field={field}
                     index={index}
-                    handleDescriptionChange={handleDescriptionChange}
+                    fields={fields}
+                    setFields={setFields}
                   />
                 )}
                 {field.value.includes("text") && (

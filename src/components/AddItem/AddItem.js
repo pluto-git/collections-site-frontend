@@ -14,7 +14,9 @@ const AddItem = ({ match }) => {
   const [fields, setFields] = useState([{}]);
   const { user } = useAuth0();
   const loadedRef = useRef(false);
+  const history = useHistory();
 
+  ///get fields, the most important labels for fields.
   useEffect(() => {
     if (user && !loadedRef.current) {
       fetch(routes.LOCALHOST + "get-fields", {
@@ -36,25 +38,13 @@ const AddItem = ({ match }) => {
     }
   }, [user, match]);
 
-  const history = useHistory();
-
-  const setLocalizedVisualLabels = (targetValue, targetLabel) => {
+  const setLocalizedVisualLabels = (targetValue) => {
     const temp_arr = fields;
     temp_arr.find((field) => {
       if (field.value === targetValue) {
-        return (field.visible_label = targetLabel);
-      } else {
-        return "";
-      }
-    });
-    setFields(temp_arr);
-  };
-
-  const handleFieldNameChange = (e) => {
-    const temp_arr = fields;
-    temp_arr.find((field) => {
-      if (field.value === e.target.id) {
-        return (field.visible_label = e.target.value);
+        return (field.visible_label = intl.formatMessage({
+          id: "add-item.item-id",
+        }));
       } else {
         return "";
       }
@@ -66,9 +56,7 @@ const AddItem = ({ match }) => {
     const temp_arr = fields;
     temp_arr.find((field) => {
       if (field.value === e.target.id) {
-        return (field.visible_value = intl.formatMessage({
-          id: "add-item.item-id",
-        }));
+        return (field.visible_value = e.target.value);
       } else {
         return "";
       }
@@ -76,15 +64,38 @@ const AddItem = ({ match }) => {
     setFields(temp_arr);
   };
 
-  const addButtonHandler = (e) => {
+  const addItemButtonHandler = () => {
     setLocalizedVisualLabels("id");
     setLocalizedVisualLabels("name");
     setLocalizedVisualLabels("tags");
-    console.log(fields);
-    ///calling api
+
+    saveItem();
   };
 
-  console.log(fields);
+  const goToCollectionHandler = () => {
+    //history to the collection page handler.
+    history.push(routes.VIEW_COLLECTION+"/"+match.params.collectionId);
+  };
+
+  const saveItem = () => {
+    fetch(routes.LOCALHOST + "add-item", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user.sub,
+        collection_id: match.params.collectionId,
+        item: fields,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
+
 
   return (
     <FormLayout>
@@ -113,7 +124,7 @@ const AddItem = ({ match }) => {
                   })}
                   className="form-control"
                   id="id"
-                  readOnly
+                  disabled
                 />
               </td>
               <td>
@@ -123,7 +134,7 @@ const AddItem = ({ match }) => {
                     id: "add-item.item-id-description",
                   })}
                   className="form-control"
-                  readOnly
+                  disabled
                 />
               </td>
             </tr>
@@ -136,7 +147,7 @@ const AddItem = ({ match }) => {
                   })}
                   className="form-control"
                   id="name"
-                  readOnly
+                  disabled
                 />
               </td>
               <td>
@@ -160,7 +171,7 @@ const AddItem = ({ match }) => {
                   })}
                   className="form-control"
                   id="tags"
-                  readOnly
+                  disabled
                 />
               </td>
               <td>
@@ -169,18 +180,18 @@ const AddItem = ({ match }) => {
             </tr>
             <AdditionalFields
               fields={fields}
+              setFields={setFields}
               handleDescriptionChange={handleDescriptionChange}
-              handleFieldNameChange={handleFieldNameChange}
             />
           </tbody>
         </table>
       </div>
       <div className="d-flex justify-content-between">
-        <button className="btn btn-primary" onClick={addButtonHandler}>
-          Save item
+        <button className="btn btn-dark" onClick={addItemButtonHandler}>
+          <FormattedMessage id="add-item.save-button" />
         </button>
-        <button className="btn btn-primary" onClick={addButtonHandler}>
-          Go to my collection
+        <button className="btn btn-dark" onClick={goToCollectionHandler}>
+          <FormattedMessage id="add-item.go-to-my-collection-button" />
         </button>
       </div>
     </FormLayout>

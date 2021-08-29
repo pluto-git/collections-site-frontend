@@ -14,6 +14,7 @@ import routes from "../../utils/routeNames";
 import fixedThemes from "../../utils/fixedThemes";
 import choices from "../../utils/choices";
 import { useEffect } from "react/cjs/react.development";
+import NameFields from "./NameFields";
 
 const CreateCollection = () => {
   const [collectionName, setCollectionName] = useState("");
@@ -109,6 +110,12 @@ const CreateCollection = () => {
             setFields={setFields}
             choices={choices}
           />
+        </div>
+        <div className="mb-3">
+          <label htmlFor={"fields"}>
+            <FormattedMessage id="create-collection.form.fields-changeNames" />
+          </label>
+          <NameFields fields={fields} setFields={setFields} />
         </div>
         <div className="mb-3 d-flex justify-content-center">
           <button
