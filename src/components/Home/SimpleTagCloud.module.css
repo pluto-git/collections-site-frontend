@@ -1,0 +1,7 @@
+.myTagCloud span {
+  text-decoration: underline;
+}
+
+.simple-cloud{
+    cursor: pointer;
+}

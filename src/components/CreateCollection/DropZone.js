@@ -7,11 +7,14 @@ import { useIntl } from "react-intl";
 import imgSources from "../../utils/imgSources";
 import styles from "./DropZone.module.css";
 
-const DropZone = () => {
-  const [image, setImage] = useState([{}]);
+const DropZone = ({image, setImage}) => {
   const [isModal, setIsModal] = useState(false);
   const [isErrorMessage, setIsErrorMessage] = useState(false);
   const intl = useIntl();
+
+  const uploadToCloudinary = ()=>{
+    
+  }
 
   const onChange = (imageList) => {
     setIsErrorMessage(false);
@@ -40,12 +43,12 @@ const DropZone = () => {
         onError={handleErrors}
         maxFileSize="10485760"
       >
-        {({ onImageUpload, dragProps }) => (
+        {({onUploadImage, dragProps }) => (
           // write your building UI
           <div>
             <div
               className={styles["drop-container"]}
-              onClick={onImageUpload}
+              onClick={onUploadImage}
               {...dragProps}
             >
               {image[0].data_url ? (

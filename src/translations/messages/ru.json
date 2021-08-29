@@ -1,4 +1,8 @@
 {
+  "home-collectionsCard.header": "Коллекции с наибольшим количеством предметов",
+  "home-lastAddedItems.header" : "Последние добавленные предметы",
+  "home-tagCloud.header" : "Облако Тэгов",
+
   "header-menu.home": "Главная страница",
   "header-menu.collections": "Коллекции",
   "header-menu.createCollections": "Создать Коллекцию",
@@ -24,6 +28,8 @@
   "collection-tool.delete": "Удалить",
 
   "create-collection.form.name": "Имя коллекции",
+  "create-collection.form.theme": "Тема коллекции",
+  "create-collection-selectFixedTheme.placeholder": "Выбирай ...",
   "create-collection.form.description": "Краткое описание",
   "create-collection.form.description.placeholder": "Не более 280 симболов",
   "create-collection.form.description.readonly-placeholder": "Здесь мы увидим превью твоего описания",
@@ -39,7 +45,7 @@
   "create-collection.form.create-and-add-items": "Создать и начать добавлять элементы",
   "create-collection.form.create": "Просто создать",
   "create-collection.form.fields-add-message": "Поля с следующими типами будут сгенерированы. Типы полей могут быть выбраны до 3 раз",
-  "add-item.header": "Поля элемента",
+  "add-item.header": "Поля предмета",
   "add-item.item-field-type": "Название поля",
   "add-item.item-field-data": "Описание поля",
   "add-item.item-id": "Идентификатор",

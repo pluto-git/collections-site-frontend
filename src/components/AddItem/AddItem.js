@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 // import MDEditor from "@uiw/react-md-editor";
 
 import FormLayout from "../Layout/FormLayout/FormLayout";
-import TagsCreation from "../TagsCreation/TagsCreation";
+import TagsCreation from "./TagsCreation";
 // import { useTable } from "react-table";
 
 import choices from "../../utils/choices";

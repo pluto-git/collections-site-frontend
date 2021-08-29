@@ -1,67 +1,64 @@
 import { useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { useHistory } from "react-router-dom";
-import MDEditor from "@uiw/react-md-editor";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import FormLayout from "../Layout/FormLayout/FormLayout";
-import DropZone from "../DropZone/DropZone";
-import Select from "react-select";
+import SelectFixedTheme from "./SelectFixedTheme";
+import MDEditor from "@uiw/react-md-editor";
+import DropZone from "./DropZone";
+import SelectFields from "./SelectFields";
 
 import routes from "../../utils/routeNames";
+import fixedThemes from "../../utils/fixedThemes";
 import choices from "../../utils/choices";
+import { useEffect } from "react/cjs/react.development";
 
 const CreateCollection = () => {
-  const [markdown, setMarkdown] = useState("");
-  const [values, setValues] = useState([choices[0], choices[1], choices[2]]);
+  const [collectionName, setCollectionName] = useState("");
+  const [fixedTheme, setFixedTheme] = useState("");
+  const [markdownDescription, setMarkdownDescription] = useState("");
+  const [image, setImage] = useState([{}]);
+  const [fields, setFields] = useState([choices[0], choices[1], choices[2]]);
+  const [id, setId] = useState("");
 
-  const intl = useIntl();
+  const { user } = useAuth0();
   const history = useHistory();
-  console.log(intl.locale);
+
+  const saveCollection = () => {
+    console.log(collectionName);
+    console.log(fixedTheme);
+    console.log(markdownDescription);
+    console.log(fields);
+    fetch(routes.LOCALHOST + "add-user-collection", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user.sub,
+        name: collectionName,
+        theme: fixedTheme.value,
+        description: markdownDescription,
+        image: image[0].data_url,
+        fields: fields,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setId(data);
+      });
+  };
+
+  useEffect(() => {
+    history.push(`/collection/${id}` + routes.ADD_ITEM);
+  }, [id]);
 
   const handleCreate = (moveToItemsEditPage = false) => {
     ///saving to api our coolection data. autogenerating our id for the collection
     //reading the ID and passing it as an argument to our dynamic route to Add/Edit Items.
-    const id = 1;
-    console.log(values);
-    if (moveToItemsEditPage === true) {
-      history.push(`/collection/${id}` + routes.ADD_ITEM);
-    } else {
-      history.push(routes.MY_COLLECTIONS);
-    }
-  };
-
-  // for fields adding:
-  const handleChange = (e, option) => {
-    if (option.removedValue && option.removedValue.isFixed) return;
-
-    setValues(e);
-  };
-
-  const noOptionMessageHandler = () => {
-    return intl.formatMessage({
-      id: "creatable-multi.no-option-message",
-    });
-  };
-
-  const styles = {
-    multiValue: (base, state) => {
-      return state.data.isFixed ? { ...base, backgroundColor: "gray" } : base;
-    },
-    multiValueLabel: (base, state) => {
-      return state.data.isFixed
-        ? {
-            ...base,
-            fontWeight: "bold",
-            color: "white",
-            padding: "6px 0px",
-            paddingRight: "8px",
-            paddingLeft: "8px",
-          }
-        : base;
-    },
-    multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base, display: "none" } : base;
-    },
+    saveCollection();
   };
 
   return (
@@ -71,50 +68,48 @@ const CreateCollection = () => {
           <label htmlFor="collectionName" className="form-label">
             <FormattedMessage id="create-collection.form.name" />
           </label>
-          <input type="name" className="form-control" id="collectionName" />
+          <input
+            type="name"
+            className="form-control"
+            id="collectionName"
+            onChange={(e) => setCollectionName(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="collectionTheme" className="form-label">
+            <FormattedMessage id="create-collection.form.theme" />
+          </label>
+          <SelectFixedTheme
+            fixedTheme={fixedTheme}
+            setFixedTheme={setFixedTheme}
+            fixedThemes={fixedThemes}
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="collectionDescription" className="form-label">
             <FormattedMessage id="create-collection.form.description" />
           </label>
-          <MDEditor value={markdown} onChange={setMarkdown} preview="edit" />
+          <MDEditor
+            value={markdownDescription}
+            onChange={setMarkdownDescription}
+            preview="edit"
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="drap-and-drop" className="form-label">
             <FormattedMessage id="create-collection.form.image" />
           </label>
-          <DropZone />
+          <DropZone image={image} setImage={setImage} />
         </div>
         <div className="mb-3">
           <label htmlFor={"fields"}>
             <FormattedMessage id="create-collection.form.fields-add-message" />
-          </label> 
-          {intl && intl.locale === "ru" ? (
-            <Select
-              getOptionLabel={(option) => option.label_ru}
-              isMulti
-              name="additional fields"
-              value={values}
-              options={choices || []}
-              inputId="fields"
-              isClearable={values && !values.some((v) => v.isFixed)}
-              noOptionsMessage={noOptionMessageHandler}
-              onChange={handleChange}
-              styles={styles}
-            />
-          ) : (
-            <Select
-              isMulti
-              name="additional fields"
-              value={values}
-              options={choices || []}
-              inputId="fields"
-              isClearable={values && !values.some((v) => v.isFixed)}
-              noOptionsMessage={noOptionMessageHandler}
-              onChange={handleChange}
-              styles={styles}
-            />
-          )}
+          </label>
+          <SelectFields
+            fields={fields}
+            setFields={setFields}
+            choices={choices}
+          />
         </div>
         <div className="mb-3 d-flex justify-content-center">
           <button
@@ -126,16 +121,7 @@ const CreateCollection = () => {
             <FormattedMessage id="create-collection.form.create-and-add-items" />
           </button>
         </div>
-        <div className="mb-3 d-flex justify-content-center">
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              handleCreate();
-            }}
-          >
-            <FormattedMessage id="create-collection.form.create" />
-          </button>
-        </div>
+        <div className="mb-3 d-flex justify-content-center"></div>
       </FormLayout>
     </>
   );

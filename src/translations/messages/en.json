@@ -1,4 +1,7 @@
 {
+  "home-collectionsCard.header": "Collections with the most items",
+  "home-lastAddedItems.header" : "Last added items",
+  "home-tagCloud.header" : "Tag Cloud",
   "header-menu.home": "Home",
   "header-menu.collections": "Collections",
   "header-menu.createCollections": "Collection creating",
@@ -24,6 +27,8 @@
   "collection-tool.delete": "Delete",
 
   "create-collection.form.name": "Collection name",
+  "create-collection.form.theme": "Collection theme",
+  "create-collection-selectFixedTheme.placeholder": "Select ...",
   "create-collection.form.description": "A short description",
   "create-collection.form.description.placeholder": "No more than 280 symbols",
   "create-collection.form.description.readonly-placeholder": "Here we'll see the preview of your description",
