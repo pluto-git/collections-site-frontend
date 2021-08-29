@@ -9,6 +9,7 @@ import MDEditor from "@uiw/react-md-editor";
 import DropZone from "./DropZone";
 import SelectFields from "./SelectFields";
 
+import defaultImage from "../../utils/defaultImage";
 import routes from "../../utils/routeNames";
 import fixedThemes from "../../utils/fixedThemes";
 import choices from "../../utils/choices";
@@ -18,7 +19,7 @@ const CreateCollection = () => {
   const [collectionName, setCollectionName] = useState("");
   const [fixedTheme, setFixedTheme] = useState("");
   const [markdownDescription, setMarkdownDescription] = useState("");
-  const [image, setImage] = useState([{}]);
+  const [image, setImage] = useState(defaultImage);
   const [fields, setFields] = useState([choices[0], choices[1], choices[2]]);
   const [id, setId] = useState("");
 
@@ -26,10 +27,6 @@ const CreateCollection = () => {
   const history = useHistory();
 
   const saveCollection = () => {
-    console.log(collectionName);
-    console.log(fixedTheme);
-    console.log(markdownDescription);
-    console.log(fields);
     fetch(routes.LOCALHOST + "add-user-collection", {
       method: "PATCH",
       headers: {
@@ -52,10 +49,12 @@ const CreateCollection = () => {
   };
 
   useEffect(() => {
-    history.push(`/collection/${id}` + routes.ADD_ITEM);
-  }, [id]);
+    if (id !== "") {
+      history.push(`/collection/${id}` + routes.ADD_ITEM);
+    }
+  }, [id, history]);
 
-  const handleCreate = (moveToItemsEditPage = false) => {
+  const handleCreate = () => {
     ///saving to api our coolection data. autogenerating our id for the collection
     //reading the ID and passing it as an argument to our dynamic route to Add/Edit Items.
     saveCollection();
@@ -115,10 +114,10 @@ const CreateCollection = () => {
           <button
             className="btn btn-primary"
             onClick={() => {
-              handleCreate(true);
+              handleCreate();
             }}
           >
-            <FormattedMessage id="create-collection.form.create-and-add-items" />
+            <FormattedMessage id="create-collection.form.create-items-fields" />
           </button>
         </div>
         <div className="mb-3 d-flex justify-content-center"></div>

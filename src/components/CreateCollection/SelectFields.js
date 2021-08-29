@@ -1,7 +1,7 @@
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import Select from "react-select";
 
-const SelectFields = ({fields, setFields, choices}) => {
+const SelectFields = ({ fields, setFields, choices }) => {
   const intl = useIntl();
 
   const handleChange = (e, option) => {

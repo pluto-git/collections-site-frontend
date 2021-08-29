@@ -39,6 +39,7 @@
   "drop-zone.not-permitted": "File type not permitted",
   "drop-zone.error-message": "It should be an image with less than 10 MB",
   "drop-zone.check-image" : "Check your image with zooming",
+  "create-collection.form.create-items-fields" : "Save and create item fields",
   "create-collection.form.create-and-add-items": " Create & Start adding items",
   "create-collection.form.create": "Simply create",
   "create-collection.form.fields-add-message": "Fields with the next types will be generated. Types can be added up to 3 times.",

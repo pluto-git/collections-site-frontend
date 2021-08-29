@@ -8,11 +8,11 @@ const colourOptions = [
   { value: "Orange", label: "Orange", __isNew__: false },
 ];
 
-const TagsCreation = () => {
+const TagsCreation = ({fields, setFields}) => {
   const [suggestions, setSuggestions] = useState([{}]);
   const [newSuggestions, setNewSuggestions] = useState([{}]);
   const [currentItemTags, setCurrentItemTags] = useState([{}]);
-  console.log(newSuggestions);
+  //console.log(newSuggestions);
   const intl = useIntl();
 
   useEffect(() => {
@@ -34,6 +34,7 @@ const TagsCreation = () => {
 
   useEffect(() => {
     // here we ll call API to save currentItemTags to our API...
+    console.log(currentItemTags);
   }, [currentItemTags]);
 
   const noOptionMessageHandler = () => {

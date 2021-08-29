@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import LastAddedItems from "./LastAddedItems";
@@ -8,7 +8,6 @@ import SimpleTagCloud from "./SimpleTagCloud";
 import routes from "../../utils/routeNames";
 
 const Home = () => {
-  const [testData, setTestData] = useState("");
   const { user } = useAuth0();
 
   useEffect(() => {
@@ -19,7 +18,7 @@ const Home = () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => setTestData(data));
+      .then((data) => console.log(data));
   }, []);
 
   useEffect(() => {
@@ -32,6 +31,7 @@ const Home = () => {
         },
         body: JSON.stringify({
           user_id: user.sub,
+          user_email: user.email,
         }),
       })
         .then((response) => response.json())

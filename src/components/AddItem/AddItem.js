@@ -1,32 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
-// import MDEditor from "@uiw/react-md-editor";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import FormLayout from "../Layout/FormLayout/FormLayout";
 import TagsCreation from "./TagsCreation";
-// import { useTable } from "react-table";
+import AdditionalFields from "./AdditionalFields";
 
-import choices from "../../utils/choices";
-// const choices = [
-//   { value: "id", label: "Id" , label_ru: "Идентификатор", isFixed: true, visible_value: "Id", visible: true},
-//   { value: "name", label: "Name", label_ru: "Имя", isFixed: true, visible_value: "", visible: true},
-//   { value: "tags", label: "Tags", label_ru: "Тэги", isFixed: true, visible_value: "", visible: true},
-//   { value: "number1", label: "Number", label_ru: "Число", isFixed: false, visible_value: "" },
-//   { value: "number2", label: "Number",label_ru: "Число", isFixed: false, visible_value: "" },
-//   { value: "number3", label: "Number", label_ru: "Число", isFixed: false, visible_value: ""},
-//   { value: "char1", label: "Single-line text", label_ru: "Однострочное поле", isFixed: false, visible_value: ""},
-// ];
+import routes from "../../utils/routeNames";
 
-const AddItem = (props) => {
+const AddItem = ({ match }) => {
   const intl = useIntl();
-  // const MdEditor1Ref = useRef();
-  const [fields, setFields] = useState(choices);
-  // const [markdown, setMarkdown] = useState("");
+  const [fields, setFields] = useState([{}]);
+  const { user } = useAuth0();
+  const loadedRef = useRef(false);
+
+  useEffect(() => {
+    if (user && !loadedRef.current) {
+      fetch(routes.LOCALHOST + "get-fields", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          user_id: user.sub,
+          collection_id: match.params.collectionId,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setFields(data);
+          loadedRef.current = true;
+        });
+    }
+  }, [user, match]);
+
   const history = useHistory();
 
+  const setLocalizedVisualLabels = (targetValue, targetLabel) => {
+    const temp_arr = fields;
+    temp_arr.find((field) => {
+      if (field.value === targetValue) {
+        return (field.visible_label = targetLabel);
+      } else {
+        return "";
+      }
+    });
+    setFields(temp_arr);
+  };
+
   const handleFieldNameChange = (e) => {
-    console.log(e.target.value);
     const temp_arr = fields;
     temp_arr.find((field) => {
       if (field.value === e.target.id) {
@@ -42,7 +66,9 @@ const AddItem = (props) => {
     const temp_arr = fields;
     temp_arr.find((field) => {
       if (field.value === e.target.id) {
-        return (field.visible_value = e.target.value);
+        return (field.visible_value = intl.formatMessage({
+          id: "add-item.item-id",
+        }));
       } else {
         return "";
       }
@@ -51,10 +77,14 @@ const AddItem = (props) => {
   };
 
   const addButtonHandler = (e) => {
+    setLocalizedVisualLabels("id");
+    setLocalizedVisualLabels("name");
+    setLocalizedVisualLabels("tags");
     console.log(fields);
     ///calling api
-    history.push("");
   };
+
+  console.log(fields);
 
   return (
     <FormLayout>
@@ -83,7 +113,7 @@ const AddItem = (props) => {
                   })}
                   className="form-control"
                   id="id"
-                  disabled
+                  readOnly
                 />
               </td>
               <td>
@@ -93,7 +123,7 @@ const AddItem = (props) => {
                     id: "add-item.item-id-description",
                   })}
                   className="form-control"
-                  disabled
+                  readOnly
                 />
               </td>
             </tr>
@@ -106,7 +136,7 @@ const AddItem = (props) => {
                   })}
                   className="form-control"
                   id="name"
-                  disabled
+                  readOnly
                 />
               </td>
               <td>
@@ -129,49 +159,19 @@ const AddItem = (props) => {
                     id: "add-item.item-tags",
                   })}
                   className="form-control"
-                  onChange={handleDescriptionChange}
                   id="tags"
-                  disabled
+                  readOnly
                 />
               </td>
               <td>
-                <TagsCreation />
+                <TagsCreation fields={fields} setFields={setFields} />
               </td>
             </tr>
-            {fields &&
-              fields.slice(3, 18).map((field, index) => {
-                return (
-                  <tr key={index + 1}>
-                    {/* <td key={index + 2} className="align-middle">
-                      {field.label}
-                    </td> */}
-                    <td>
-                      <input
-                        type="text"
-                        placeholder={intl.formatMessage({
-                          id: "add-item.item-" + field.label,
-                        })}
-                        className="form-control"
-                        onChange={handleFieldNameChange}
-                        key={index + 2}
-                        id={field.value}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        placeholder={intl.formatMessage({
-                          id: "add-item.item-description-placeholder",
-                        })}
-                        className="form-control"
-                        onChange={handleDescriptionChange}
-                        key={index + 3}
-                        id={field.value}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
+            <AdditionalFields
+              fields={fields}
+              handleDescriptionChange={handleDescriptionChange}
+              handleFieldNameChange={handleFieldNameChange}
+            />
           </tbody>
         </table>
       </div>
