@@ -18,6 +18,7 @@
 
   "my-collections.header": "Мои коллекции",
   "collection-table.name": "Имя",
+  "collection-table.theme": "Тема",
   "collection-table.image": "Изображение",
   "collection-table.description": "Краткое описание",
   "collection-table.actions": "Действия",

@@ -1,14 +1,14 @@
 const routes = {
   HOME: "/",
-  COLLECTIONS: "/collections",
+  // COLLECTIONS: "/collections",
   ADMIN_VIEW: "/admin-view",
   MY_COLLECTIONS: "/my-collections",
   CREATE_COLLECTION: "/create-collection",
   VIEW_COLLECTION: "/collection",
   EDIT_COLLECTION: "/edit-collection",
   ADD_ITEM: "/add-item",
-  LOCALHOST: "http://localhost:3001/",
-  HEROKU: "https://pure-garden-50942.herokuapp.com/"
+  LOCALHOST: "https://pure-garden-50942.herokuapp.com/",
+  // HEROKU: "https://pure-garden-50942.herokuapp.com/"
 };
 // 
 

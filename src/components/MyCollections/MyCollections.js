@@ -1,19 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
+import { useAuth0 } from "@auth0/auth0-react";
+import TableBody from "./TableBody";
 
 import routes from "../../utils/routeNames";
-import dummyData from "../../utils/dummyData";
 
 const MyCollections = () => {
   const [collections, setCollections] = useState([{}]);
   const history = useHistory();
-  const intl = useIntl();
-
+  const { user } = useAuth0();
+  const loadedRef = useRef(false);
   //calling api
   useEffect(() => {
-    setCollections(dummyData);
-  }, [setCollections]);
+    if (!loadedRef.current){
+    getCollections();
+    loadedRef.current = true;
+    }
+  });
+
+  const getCollections = () => {
+    fetch(routes.LOCALHOST + user.sub + "/collections/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCollections(data);
+      });
+  };
 
   const collectionToolHandlder = (event, tool) => {
     const collectionId = event.target.id;
@@ -41,7 +59,14 @@ const MyCollections = () => {
   };
 
   const deleteCollection = (id) => {
-    // const collectionId = e.target.id;
+    fetch(routes.LOCALHOST + user.sub + "/delete-collection/" + id, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCollections(data);
+      });
+    getCollections();
   };
 
   return (
@@ -71,6 +96,9 @@ const MyCollections = () => {
                   <FormattedMessage id="collection-table.name" />
                 </th>
                 <th scope="col">
+                  <FormattedMessage id="collection-table.theme" />
+                </th>
+                <th scope="col" className="text-center">
                   <FormattedMessage id="collection-table.image" />
                 </th>
                 <th scope="col">
@@ -82,81 +110,11 @@ const MyCollections = () => {
               </tr>
             </thead>
             <tbody>
-              {collections.map((collection, index) => {
-                return (
-                  <tr key={index + 1}>
-                    <td key={index + 2} className="align-middle">
-                      {collection.name}
-                    </td>
-                    <td key={index + 3} className="align-middle text-center">
-                      <img
-                        src={collection.image}
-                        className="img-fluid rounded"
-                        alt="collection"
-                      ></img>
-                    </td>
-                    <td key={index + 4}>{collection.description}</td>
-                    <td key={index + 5} className="align-middle ">
-                      <div className="d-flex">
-                        <div
-                          className="view"
-                          title={intl.formatMessage({
-                            id: "collection-tool.view",
-                          })}
-                          data-toggle="tooltip"
-                          role="button"
-                          onClick={(e) => {
-                            collectionToolHandlder(e, "view");
-                          }}
-                        >
-                          <i
-                            className="material-icons text-primary"
-                            id={collection.id}
-                          >
-                            &#xE417;
-                          </i>
-                        </div>
-                        <div
-                          className="edit"
-                          title={intl.formatMessage({
-                            id: "collection-tool.edit",
-                          })}
-                          data-toggle="tooltip"
-                          role="button"
-                          onClick={(e) => {
-                            collectionToolHandlder(e, "edit");
-                          }}
-                        >
-                          <i
-                            className="material-icons text-warning"
-                            id={collection.id}
-                          >
-                            &#xE254;
-                          </i>
-                        </div>
-                        <div
-                          className="delete"
-                          title={intl.formatMessage({
-                            id: "collection-tool.delete",
-                          })}
-                          data-toggle="tooltip"
-                          role="button"
-                          onClick={(e) => {
-                            collectionToolHandlder(e, "delete");
-                          }}
-                        >
-                          <i
-                            className="material-icons text-danger"
-                            id={collection.id}
-                          >
-                            &#xE872;
-                          </i>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+              <TableBody
+                collections={collections}
+                collectionToolHandlder={collectionToolHandlder}
+                viewCollection={viewCollection}
+              />
             </tbody>
           </table>
         </div>

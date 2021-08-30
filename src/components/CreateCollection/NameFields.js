@@ -4,7 +4,6 @@ const NameFields = ({ fields, setFields }) => {
   const intl = useIntl();
   console.log(fields);
 
-
   const handleFieldNameChange = (e) => {
     const temp_arr = fields;
     temp_arr.find((field) => {
@@ -31,6 +30,7 @@ const NameFields = ({ fields, setFields }) => {
                 className="form-control"
                 onChange={handleFieldNameChange}
                 id={field.value}
+                key={field.value + index}
               />
             );
           })}

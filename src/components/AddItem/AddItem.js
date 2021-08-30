@@ -18,17 +18,13 @@ const AddItem = ({ match }) => {
 
   ///get fields, the most important labels for fields.
   useEffect(() => {
-    if (user && !loadedRef.current) {
-      fetch(routes.LOCALHOST + "get-fields", {
-        method: "POST",
+    if (!loadedRef.current) {
+      fetch(routes.LOCALHOST+user.sub+"/get-fields/"+match.params.collectionId, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          user_id: user.sub,
-          collection_id: match.params.collectionId,
-        }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -36,7 +32,7 @@ const AddItem = ({ match }) => {
           loadedRef.current = true;
         });
     }
-  }, [user, match]);
+  }, [user,match]);
 
   const setLocalizedVisualLabels = (targetValue) => {
     const temp_arr = fields;
