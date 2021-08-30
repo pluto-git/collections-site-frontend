@@ -1,23 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-
-import LastAddedItems from "./LastAddedItems";
-import GetCollectionCards from "./GetCollectionCards";
-import SimpleTagCloud from "./SimpleTagCloud";
-
+import CollectionCard from "./CollectionCard";
 import routes from "../../utils/routeNames";
+import { FormattedMessage } from "react-intl";
 
 const Home = () => {
   const { user } = useAuth0();
+  const [collections, setCollections] = useState([{}]);
 
   useEffect(() => {
-    fetch(routes.LOCALHOST, {
+    fetch(routes.LOCALHOST + "all-collections", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then((data) => setCollections(data));
   }, []);
 
   useEffect(() => {
@@ -37,17 +36,36 @@ const Home = () => {
         .then((data) => console.log(data));
     }
   }, [user]);
-
-  const image =
-    "https://www.adazing.com/wp-content/uploads/2019/02/open-book-clipart-03.png";
-  const description =
-    "It is a long established fact that a reader will be distracted by the text.";
+  console.log(collections);
   return (
     <>
       <div className="container">
-        <LastAddedItems />
-        <GetCollectionCards image={image} description={description} />
-        <SimpleTagCloud />
+        {/* <LastAddedItems /> */}
+        <h2 className="text-center">
+          <FormattedMessage id="home-collectionsCard.header" />
+        </h2>
+        {collections.map(
+          (item, index) =>
+            item.collections &&
+            item.collections.map((col, subIndex) => {
+              console.log(col.name);
+              return (
+                <div className="row" key={subIndex + 1}>
+                  <div className="col" key={subIndex + 2}>
+                    <CollectionCard
+                      name={col.name}
+                      image={col.image}
+                      description={col.description}
+                      _id={col._id}
+                      items={col.items}
+                    />
+                  </div>
+                </div>
+              );
+            })
+        )}
+        <br />
+        {/* <SimpleTagCloud /> */}
       </div>
     </>
   );

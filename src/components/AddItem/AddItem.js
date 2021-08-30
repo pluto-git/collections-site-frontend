@@ -70,7 +70,8 @@ const AddItem = ({ match }) => {
 
   const goToCollectionHandler = () => {
     //history to the collection page handler.
-    history.push(routes.VIEW_COLLECTION+"/"+match.params.collectionId);
+    history.push(routes.MY_COLLECTIONS);
+    // history.push(routes.VIEW_COLLECTION+"/"+match.params.collectionId);
   };
 
   const saveItem = () => {
@@ -187,7 +188,7 @@ const AddItem = ({ match }) => {
           <FormattedMessage id="add-item.save-button" />
         </button>
         <button className="btn btn-dark" onClick={goToCollectionHandler}>
-          <FormattedMessage id="add-item.go-to-my-collection-button" />
+          <FormattedMessage id="add-item.go-to-my-collections-button" />
         </button>
       </div>
     </FormLayout>

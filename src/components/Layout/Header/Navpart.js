@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import routes from "../../../utils/routeNames";
 import styles from "./Header.module.css";
-const Navpart = ({handleSetLocale,handleSetTheme,theme, imgSources}) => {
+const Navpart = ({ handleSetLocale, imgSources }) => {
   const intl = useIntl();
   const { isAuthenticated } = useAuth0();
   return (
@@ -59,23 +59,6 @@ const Navpart = ({handleSetLocale,handleSetTheme,theme, imgSources}) => {
                   onClick={handleSetLocale}
                 >
                   <FormattedMessage id="header-menu.languageToEnglish" />
-                </span>
-              )}
-            </li>
-            <li>
-              {theme === "light" ? (
-                <span
-                  className="dropdown-item pe-auto"
-                  onClick={handleSetTheme}
-                >
-                  <FormattedMessage id="header-menu.themeToDark" />
-                </span>
-              ) : (
-                <span
-                  className="dropdown-item pe-auto"
-                  onClick={handleSetTheme}
-                >
-                  <FormattedMessage id="header-menu.themeToLight" />
                 </span>
               )}
             </li>

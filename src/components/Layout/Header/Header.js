@@ -6,25 +6,27 @@ import Navpart from "./Navpart";
 
 import Home from "../../Home/Home";
 import CreateCollection from "../../CreateCollection/CreateCollection";
-import ViewCollection from "../../ViewCollection/ViewCollection";
+import ViewCollection from "../../UserAccessCollection/UserAccessCollection";
 import EditCollection from "../../EditCollection/EditCollection";
 import AdminView from "../../AdminView/AdminView";
 import MyCollections from "../../MyCollections/MyCollections";
+import ViewItem from "../../ViewItem/ViewItem";
 import AddItem from "../../AddItem/AddItem";
-import NoMatch from "../../404/404";
+import EditItem from "../../EditItem/EditItem";
+import GuestViewCollection from "../../Guests/GuestViewCollection";
+import NoMatch from "../../helper components/404";
 
 import routes from "../../../utils/routeNames";
 import imgSources from "../../../utils/imgSources";
-import { setToLS, getFromLS } from "../../../utils/localeStorage";
-import Loading from "../../Loading/Loading";
-import ProtectedRoute from "../../ProtectedRoute/ProtectedRoute";
+import { setToLS } from "../../../utils/localeStorage";
+import Loading from "../../helper components/Loading/Loading";
+import ProtectedRoute from "../../helper components/ProtectedRoute";
 
 import styles from "./Header.module.css";
 
 const Header = (props) => {
   const intl = useIntl();
   const { loginWithRedirect, logout, isAuthenticated, isLoading } = useAuth0();
-  const theme = getFromLS("theme") || "dark";
 
   if (isLoading) {
     return <Loading />;
@@ -41,31 +43,6 @@ const Header = (props) => {
     }
   };
 
-  const handleSetTheme = () => {
-    const t = theme;
-    if (t === "light") {
-      props.setTheme("dark");
-      setToLS("theme", "dark");
-    } else {
-      props.setTheme("light");
-      setToLS("theme", "light");
-    }
-  };
-
-  //   const themes = [
-  //     {
-  //       light: {
-  //         background: "bg-primary",
-  //       },
-  //     },
-  //     {
-  //       dark: {
-  //         background: "bg-dark",
-  //       },
-  //     },
-  //   ];
-
-  //  console.log(themes);
   return (
     <Router>
       <header className="p-3 text-white bg-dark">
@@ -84,8 +61,6 @@ const Header = (props) => {
             </Link>
             <Navpart
               handleSetLocale={handleSetLocale}
-              theme={theme}
-              handleSetTheme={handleSetTheme}
               imgSources={imgSources}
             />
 
@@ -174,10 +149,11 @@ const Header = (props) => {
         <Route exact path={routes.HOME} component={Home} />
         <Route
           exact
-          path={routes.VIEW_COLLECTION + "/:collectionId"}
-          component={ViewCollection}
+          path={
+            "/guest/collection/:collectionId"
+          }
+          component={GuestViewCollection}
         />
-        {/* Need to check the admin route! on the backend!*/}
 
         <ProtectedRoute path={routes.ADMIN_VIEW} component={AdminView} />
         <ProtectedRoute
@@ -190,18 +166,32 @@ const Header = (props) => {
           path={routes.CREATE_COLLECTION}
           component={CreateCollection}
         />
-
+        <ProtectedRoute
+          exact
+          path={routes.VIEW_COLLECTION + "/:collectionId"}
+          component={ViewCollection}
+        />
         <ProtectedRoute
           exact
           path={routes.EDIT_COLLECTION + "/:collectionId"}
           component={EditCollection}
         />
+
         <ProtectedRoute
           exact
           path={"/collection/:collectionId" + routes.ADD_ITEM}
           component={AddItem}
         />
-
+        <ProtectedRoute
+          exact
+          path={"/collection/:collectionId" + routes.EDIT_ITEM + ":/itemId"}
+          component={EditItem}
+        />
+        <ProtectedRoute
+          exact
+          path={"/collection/:collectionId" + routes.VIEW_ITEM + "/:itemId"}
+          component={ViewItem}
+        />
         <Route path="*" component={NoMatch}></Route>
       </Switch>
     </Router>

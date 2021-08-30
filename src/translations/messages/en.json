@@ -1,6 +1,8 @@
 {
   "home-collectionsCard.header": "Collections with the most items",
   "home-lastAddedItems.header": "Last added items",
+  "home-collections-button-visit" : "Visit the collection",
+  "home-collections-item-quantity": " items",
   "home-tagCloud.header": "Tag Cloud",
   "header-menu.home": "Home",
   "header-menu.collections": "Collections",
@@ -59,7 +61,9 @@
   "add-item.item-Date": "Date",
   "add-item.item-Checkbox": "checkbox",
   "add-item.save-button": "Save this item",
-  "add-item.go-to-my-collection-button": "Go to this collection",
+  "add-item.go-to-my-collections-button": "Go to my collections",
   "creatable-multi.no-option-message": "No option",
-  "creatable-multi.placeholder": "Select/write tags..."
+  "creatable-multi.placeholder": "Select/write tags...",
+
+  "collection.header": "Items"
 }

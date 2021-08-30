@@ -2,11 +2,11 @@ import { useIntl } from "react-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const TableBody = ({ collections, collectionToolHandlder, viewCollection }) => {
+const TableBody = ({ items, itemToolHandler, viewItem }) => {
   const intl = useIntl();
   return (
     <>
-      {collections && collections.map((collection, index) => {
+      {items && items.map((item, index) => {
         return (
           <tr key={index + 1}>
             <td key={index + 2} className=" align-middle link-primary">
@@ -18,30 +18,24 @@ const TableBody = ({ collections, collectionToolHandlder, viewCollection }) => {
                 data-toggle="tooltip"
                 role="button"
                 onClick={() => {
-                  viewCollection(collection._id);
+                  viewItem(item._id);
                 }}
               >
-                {collection.name}
+                {item.name}
               </div>
             </td>
 
             <td key={index + 3} className="align-middle">
-              {collection.theme}
-            </td>
-            <td key={index + 4} className="align-middle text-center">
-              <img
-                src={collection.image}
-                className="img-fluid rounded"
-                alt="collection"
-                width="60"
-              />
+              {item.theme}
             </td>
             <td key={index + 5} className="align-middle">
               <ReactMarkdown
-                children={collection.description}
+                children={item.description}
                 remarkPlugins={[remarkGfm]}
               />
             </td>
+
+            
             <td key={index + 6} className="align-middle ">
               <div className="d-flex">
                 <div
@@ -52,12 +46,12 @@ const TableBody = ({ collections, collectionToolHandlder, viewCollection }) => {
                   data-toggle="tooltip"
                   role="button"
                   onClick={(e) => {
-                    collectionToolHandlder(e, "view");
+                    itemToolHandler(e, "view");
                   }}
                 >
                   <i
                     className="material-icons text-primary"
-                    id={collection._id}
+                    id={item._id}
                   >
                     &#xE417;
                   </i>
@@ -70,12 +64,12 @@ const TableBody = ({ collections, collectionToolHandlder, viewCollection }) => {
                   data-toggle="tooltip"
                   role="button"
                   onClick={(e) => {
-                    collectionToolHandlder(e, "edit");
+                    itemToolHandler(e, "edit");
                   }}
                 >
                   <i
                     className="material-icons text-warning"
-                    id={collection._id}
+                    id={item._id}
                   >
                     &#xE254;
                   </i>
@@ -88,10 +82,10 @@ const TableBody = ({ collections, collectionToolHandlder, viewCollection }) => {
                   data-toggle="tooltip"
                   role="button"
                   onClick={(e) => {
-                    collectionToolHandlder(e, "delete");
+                    itemToolHandler(e, "delete");
                   }}
                 >
-                  <i className="material-icons text-danger" id={collection._id}>
+                  <i className="material-icons text-danger" id={item._id}>
                     &#xE872;
                   </i>
                 </div>

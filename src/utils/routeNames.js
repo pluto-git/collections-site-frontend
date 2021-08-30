@@ -6,11 +6,13 @@ const routes = {
   CREATE_COLLECTION: "/create-collection",
   VIEW_COLLECTION: "/collection",
   EDIT_COLLECTION: "/edit-collection",
+  VIEW_ITEM: "/view-item",
   ADD_ITEM: "/add-item",
-  LOCALHOST: "https://pure-garden-50942.herokuapp.com/",
-  // HEROKU: "https://pure-garden-50942.herokuapp.com/"
+  EDIT_ITEM: "/edit-item",
+  // LOCALHOST: "http://localhost:3001/",
+  LOCALHOST: "https://pure-garden-50942.herokuapp.com/"
 };
-// 
+//localhost's value can be changed to any existing backend.
 
 // /collections
 // /create-collection
